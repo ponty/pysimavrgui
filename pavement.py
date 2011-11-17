@@ -49,10 +49,8 @@ classifiers = [
 install_requires = [
     'setuptools',
     'path.py',
-    'pysimavr',
     'pygame',
     'entrypoint2',
-    
     ]
 
 setup(
