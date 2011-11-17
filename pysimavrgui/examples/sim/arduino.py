@@ -28,6 +28,7 @@ from pysimavr.lcd import Lcd
 from pysimavr.ledrow import LedRow
 from pysimavr.spk import Spk
 from pysimavr.udp import Udp
+from pysimavr.udpreader import UdpReader
 from pysimavr.vcdfile import VcdFile
 from pysimavrgui.buttongame import ButtonGame
 from pysimavrgui.compgame import CompositeGame
@@ -37,12 +38,9 @@ from pysimavrgui.lcdgame import LcdGame
 from pysimavrgui.ledrowgame import LedRowGame
 from pysimavrgui.spkgame import SpkGame
 from pysimavrgui.textgame import TextGame
-from pysimavr.udpreader import UdpReader
 import os
-import socket
 import sys
 import tempfile
-import threading
 import time
 
 
@@ -51,7 +49,7 @@ import time
 
 def lastline(s):
     if s:
-        s = s.splitlines()[-1]        
+        s = s.splitlines(1)[-1]        
     return s
 
 def find_elf():
@@ -198,10 +196,12 @@ def arduino_sim(
                                              '0 1 2 3 4 5 6 7 8 9 a b c d'.split(),
                                              )
                    ]
+    info = InfoGame(avr)
     def reload_firmware():
         firmware = Firmware(find_elf())
         avr.load_firmware(firmware)
         lcd.reset()
+        info.reload()
         
     class MyFloat(object):
         def __init__(self, value=0.0):
@@ -214,11 +214,24 @@ def arduino_sim(
             self.value /= 10.0
     speed = MyFloat(speed)
     
+    def udp_read():
+        if not hasattr(udp_read, 'display'):
+            udp_read.display = ''
+        if not hasattr(udp_read, 'lastline'):
+            udp_read.lastline = ''
+        s = udpReader.read()
+        if s:
+            sys.stdout.write(s)
+            udp_read.lastline += s
+            udp_read.lastline =  lastline(udp_read.lastline)
+            udp_read.display =  udp_read.lastline.replace('\n','\\n').replace('\r','\\r')
+        return  udp_read.display
+    
     dev = CompositeGame([
                         CompositeGame([led_game,
                                        CompositeGame(but_guis, align=1),
                                        ], align=0),
-                        InfoGame(avr),
+                        info,
                         CompositeGame([
                             CompositeGame([
                                 ButtonGame(label='reload',
@@ -234,7 +247,7 @@ def arduino_sim(
                                            ], align=1),
                                        
                                 LcdGame(lambda x, y:lcd.get_char(x, y), (16, 2)),
-                                TextGame((lambda : 'ser=' + lastline(udpReader.buffer))),
+                                TextGame((lambda : 'ser=' + udp_read())),
                                 ], align=1)
                        ])
 
@@ -244,9 +257,9 @@ def arduino_sim(
         bufpos = 0
         def cb_loop(self):
             AvrSimMain.cb_loop(self)
-            if len(udpReader.buffer)>self.bufpos:
-                sys.stdout.write(udpReader.buffer[self.bufpos:])
-                self.bufpos=len(udpReader.buffer)
+#            if len(udpReader.buffer) > self.bufpos:
+#                sys.stdout.write(''.join(udpReader.buffer[self.bufpos:]))
+#                self.bufpos = len(udpReader.buffer)
 
     sim = ArduinoMain(avr, dev, vcd, speed=speed, fps=fps, visible=visible, timeout=timeout,
                scrshot_by_exit=scrshot_by_exit)

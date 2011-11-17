@@ -1,3 +1,4 @@
+from path import path
 from pysimavrgui.compgame import CompositeGame
 from pysimavrgui.textgame import TextGame
 import pygame
@@ -22,17 +23,21 @@ class InfoGame(CompositeGame):
         cycle_measure_time = 1
         self.speed = 0
         self.start = pygame.time.get_ticks()
-
+        self.firmware_time= '??:??:??'
+        self.avr= avr
+        
+        self.reload()
         
         CompositeGame.__init__(self,
                 [
                  TextGame((lambda : "mcu=%s" % avr.mcu)),
 
                  TextGame((lambda : "f_cpu=%s" % format_freq(avr.f_cpu))),
-                 TextGame((lambda : "%s" % avr.firmware.filename.name.split('.')[0])),
+                 TextGame((lambda : "%s (%s)" % (avr.firmware.filename.name
+                           ,self.firmware_time))),
                  TextGame((lambda : 'prog: %s bytes %s%% ' % (avr.avrsize.program_bytes, avr.avrsize.program_percentage))),
                  TextGame((lambda : 'mem: %s bytes %s%%' % (avr.avrsize.data_bytes, avr.avrsize.data_percentage))),
-                TextGame((lambda : "vcc=%sV avcc=%sV" % (avr.vcc, avr.avcc))),
+                 TextGame((lambda : "vcc=%sV avcc=%sV" % (avr.vcc, avr.avcc))),
                  TextGame((lambda : "pc=%8d" % avr.pc)),
                  TextGame((lambda : "state=%s" % avr.states[avr.state])),
                  TextGame((lambda : "cycle= %9d" % (avr.cycle))),
@@ -63,6 +68,14 @@ class InfoGame(CompositeGame):
 #        self._thread.daemon = 1
         self._stop_thread = False
         self._thread.start()
+        
+    def reload(self):
+        x='??:??:??'
+        if self.avr.firmware.filename.exists():
+            x = time.strftime("%H:%M:%S", time.localtime(self.avr.firmware.filename.mtime))
+        self.firmware_time= x
+            
+       
         
     def exit(self):
         self._stop_thread = 1
