@@ -28,6 +28,8 @@ Simulation examples
 .. program-output:: python -m pysimavrgui.examples.sim.sgm7 --help
     :prompt:
     
+.. program-output:: python -m pysimavrgui.examples.sim.arduino --help
+    :prompt:
     
     
     

@@ -42,7 +42,10 @@ import os
 import sys
 import tempfile
 import time
-
+try:
+    import pyavrutils
+except ImportError:
+    pyavrutils = None
 
 
         
@@ -99,6 +102,7 @@ def arduino_sim(
             udp_enable=1,
             avcc=5000,
             vcc=5000,
+            code=None,
             ):
     '''
     
@@ -108,10 +112,17 @@ def arduino_sim(
      - atmega2560 NO
      - atmega1280 NO
      
-    : param mcu: 
+    :param mcu: 
+    :param avcc: AVcc  in mV
+    :param vcc: Vcc  in mV
     
     '''
-        
+
+    if code and pyavrutils:
+        cc = pyavrutils.Arduino()
+        cc.build(code)
+        elf = cc.output
+   
     if not elf:
         elf = find_elf()
     firmware = Firmware(elf)
@@ -223,8 +234,8 @@ def arduino_sim(
         if s:
             sys.stdout.write(s)
             udp_read.lastline += s
-            udp_read.lastline =  lastline(udp_read.lastline)
-            udp_read.display =  udp_read.lastline.replace('\n','\\n').replace('\r','\\r')
+            udp_read.lastline = lastline(udp_read.lastline)
+            udp_read.display = udp_read.lastline.replace('\n', '\\n').replace('\r', '\\r')
         return  udp_read.display
     
     dev = CompositeGame([
