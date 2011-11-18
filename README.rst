@@ -52,6 +52,10 @@ Ubuntu
     sudo apt-get install gcc
     sudo apt-get install libelf-dev
     sudo easy_install pysimavr    
+
+    # for arduino
+    sudo apt-get install scons
+    sudo apt-get install arduino
     
     sudo easy_install pysimavrgui
 
