@@ -1,0 +1,557 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Simulation examples &mdash; pysimavrgui 0.0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pysimavrgui 0.0.2 documentation" href="index.html" />
+    <link rel="next" title="Arduino simulator" href="exard.html" />
+    <link rel="prev" title="GUI examples" href="exgame.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="exard.html" title="Arduino simulator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="exgame.html" title="GUI examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pysimavrgui 0.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="simulation-examples">
+<h1>Simulation examples<a class="headerlink" href="#simulation-examples" title="Permalink to this headline">¶</a></h1>
+<p>These examples have simulation.</p>
+<div class="section" id="ledramp">
+<h2>ledramp<a class="headerlink" href="#ledramp" title="Permalink to this headline">¶</a></h2>
+<p>Program:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">entrypoint2</span> <span class="kn">import</span> <span class="n">entrypoint</span>
+<span class="kn">from</span> <span class="nn">path</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">pysimavr.avr</span> <span class="kn">import</span> <span class="n">Avr</span>
+<span class="kn">from</span> <span class="nn">pysimavr.connect</span> <span class="kn">import</span> <span class="n">connect_pins_by_rule</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.examples.sim.avrsimmain</span> <span class="kn">import</span> <span class="n">AvrSimMain</span>
+<span class="kn">from</span> <span class="nn">pysimavr.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.compgame</span> <span class="kn">import</span> <span class="n">CompositeGame</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.infogame</span> <span class="kn">import</span> <span class="n">InfoGame</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.ledrowgame</span> <span class="kn">import</span> <span class="n">LedRowGame</span>
+<span class="kn">from</span> <span class="nn">pysimavr.ledrow</span> <span class="kn">import</span> <span class="n">LedRow</span>
+<span class="kn">from</span> <span class="nn">pysimavr.vcdfile</span> <span class="kn">import</span> <span class="n">VcdFile</span>
+
+<span class="nd">@entrypoint</span>
+<span class="k">def</span> <span class="nf">run_sim</span><span class="p">(</span><span class="n">vcdfile</span><span class="o">=</span><span class="s">&#39;ledramp.vcd&#39;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">image_file</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">firmware</span> <span class="o">=</span> <span class="n">Firmware</span><span class="p">(</span><span class="n">path</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">dirname</span><span class="p">()</span> <span class="o">/</span> <span class="s">&#39;ledramp.elf&#39;</span><span class="p">)</span>
+    <span class="n">avr</span> <span class="o">=</span> <span class="n">Avr</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">f_cpu</span><span class="o">=</span><span class="mi">8000000</span><span class="p">,</span> <span class="n">mcu</span><span class="o">=</span><span class="s">&#39;atmega48&#39;</span><span class="p">)</span>
+
+    <span class="n">vcd</span> <span class="o">=</span> <span class="n">VcdFile</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">vcdfile</span><span class="p">)</span>
+    <span class="n">ledrow</span> <span class="o">=</span> <span class="n">LedRow</span><span class="p">(</span><span class="n">avr</span><span class="p">)</span>
+    <span class="n">connect_pins_by_rule</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">                        avr.B0 ==&gt; led.0 -&gt; vcd</span>
+<span class="s">                        avr.B1 ==&gt; led.1 -&gt; vcd</span>
+<span class="s">                        avr.B2 ==&gt; led.2 -&gt; vcd</span>
+<span class="s">                        avr.B3 ==&gt; led.3 -&gt; vcd</span>
+<span class="s">                        avr.B4 ==&gt; led.4 -&gt; vcd</span>
+<span class="s">                        avr.B5 ==&gt; led.5 -&gt; vcd</span>
+<span class="s">                        avr.B6 ==&gt; led.6 -&gt; vcd</span>
+<span class="s">                        avr.B7 ==&gt; led.7 -&gt; vcd</span>
+<span class="s">                        &#39;&#39;&#39;</span><span class="p">,</span>
+                         <span class="nb">dict</span><span class="p">(</span>
+                             <span class="n">avr</span><span class="o">=</span><span class="n">avr</span><span class="p">,</span>
+                             <span class="n">led</span><span class="o">=</span><span class="n">ledrow</span><span class="p">,</span>
+                             <span class="p">),</span>
+                         <span class="n">vcd</span><span class="o">=</span><span class="n">vcd</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">state_func</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ledrow</span><span class="o">.</span><span class="n">pinstate</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">ledrow</span><span class="o">.</span><span class="n">reset_dirty</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">led_game</span> <span class="o">=</span> <span class="n">LedRowGame</span><span class="p">(</span><span class="n">state_func</span><span class="o">=</span><span class="n">state_func</span><span class="p">,</span>
+                          <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;B&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)])</span>
+        
+    <span class="n">dev</span> <span class="o">=</span> <span class="n">CompositeGame</span><span class="p">([</span>
+                        <span class="n">led_game</span><span class="p">,</span>
+                        <span class="n">InfoGame</span><span class="p">(</span><span class="n">avr</span><span class="p">),</span>
+                        <span class="p">])</span>
+    
+    <span class="n">scrshot_by_exit</span> <span class="o">=</span> <span class="p">[(</span><span class="n">dev</span><span class="p">,</span> <span class="n">image_file</span><span class="p">)]</span> <span class="k">if</span> <span class="n">image_file</span> <span class="k">else</span> <span class="bp">None</span>
+
+    <span class="n">AvrSimMain</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">vcd</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+               <span class="n">scrshot_by_exit</span><span class="o">=</span><span class="n">scrshot_by_exit</span><span class="p">)</span><span class="o">.</span><span class="n">run_game</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Starting program:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysimavrgui.examples.sim.ledramp</span> <span class="kn">import</span> <span class="n">run_sim</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">run_sim</span><span class="p">(</span><span class="n">vcdfile</span><span class="o">=</span><span class="s">&#39;docs/ledramp.vcd&#39;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">image_file</span><span class="o">=</span><span class="s">&#39;docs/ledramp.png&#39;</span><span class="p">)</span>
+<span class="go">Loaded 1850 .text</span>
+<span class="go">Loaded 32 .data</span>
+<span class="go">Starting atmega48 - flashend 0fff ramend 02ff e2end 00ff</span>
+<span class="go">atmega48 init</span>
+<span class="go">avr_timer_reconfigure-2 clock turned off</span>
+<span class="go">avr_timer_configure-2 TOP 4096.00Hz = 1953 cycles</span>
+<span class="go">avr_timer_write_ocr-2 mode 2 UNSUPPORTED</span>
+<span class="go">avr_timer_configure-2 TOP 64.00Hz = 125000 cycles</span>
+<span class="go">avr_timer_configure-2 A 64.00Hz = 125000 cycles</span>
+</pre></div>
+</div>
+<p>GUI:</p>
+<img alt="_images/ledramp.png" src="_images/ledramp.png" />
+<p>Signals:</p>
+<img alt="_images/gtkwave_id0.png" src="_images/gtkwave_id0.png" />
+</div>
+<div class="section" id="lcd">
+<h2>LCD<a class="headerlink" href="#lcd" title="Permalink to this headline">¶</a></h2>
+<p>Program:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">entrypoint2</span> <span class="kn">import</span> <span class="n">entrypoint</span>
+<span class="kn">from</span> <span class="nn">path</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">pysimavr.ac</span> <span class="kn">import</span> <span class="n">Ac</span>
+<span class="kn">from</span> <span class="nn">pysimavr.avr</span> <span class="kn">import</span> <span class="n">Avr</span>
+<span class="kn">from</span> <span class="nn">pysimavr.connect</span> <span class="kn">import</span> <span class="n">connect_pins_by_rule</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.examples.sim.avrsimmain</span> <span class="kn">import</span> <span class="n">AvrSimMain</span>
+<span class="kn">from</span> <span class="nn">pysimavr.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.compgame</span> <span class="kn">import</span> <span class="n">CompositeGame</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.infogame</span> <span class="kn">import</span> <span class="n">InfoGame</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.lcdgame</span> <span class="kn">import</span> <span class="n">LcdGame</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.ledrowgame</span> <span class="kn">import</span> <span class="n">LedRowGame</span>
+<span class="kn">from</span> <span class="nn">pysimavr.lcd</span> <span class="kn">import</span> <span class="n">Lcd</span>
+<span class="kn">from</span> <span class="nn">pysimavr.ledrow</span> <span class="kn">import</span> <span class="n">LedRow</span>
+<span class="kn">from</span> <span class="nn">pysimavr.vcdfile</span> <span class="kn">import</span> <span class="n">VcdFile</span>
+
+<span class="nd">@entrypoint</span>
+<span class="k">def</span> <span class="nf">run_sim</span><span class="p">(</span><span class="n">vcdfile</span><span class="o">=</span><span class="s">&#39;lcd.vcd&#39;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">image_file</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">firmware</span> <span class="o">=</span> <span class="n">Firmware</span><span class="p">(</span><span class="n">path</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">dirname</span><span class="p">()</span> <span class="o">/</span> <span class="s">&#39;lcd.elf&#39;</span><span class="p">)</span>
+    <span class="n">avr</span> <span class="o">=</span> <span class="n">Avr</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span><span class="n">f_cpu</span><span class="o">=</span><span class="mi">16000000</span><span class="p">)</span>
+    <span class="n">lcd</span> <span class="o">=</span> <span class="n">Lcd</span><span class="p">(</span><span class="n">avr</span><span class="p">)</span>
+    <span class="n">ledrow</span> <span class="o">=</span> <span class="n">LedRow</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+    <span class="c"># period=1000 -&gt; vcd error</span>
+    <span class="n">vcd</span> <span class="o">=</span> <span class="n">VcdFile</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">vcdfile</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">state_func</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ledrow</span><span class="o">.</span><span class="n">pinstate</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">ledrow</span><span class="o">.</span><span class="n">reset_dirty</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">led_game</span> <span class="o">=</span> <span class="n">LedRowGame</span><span class="p">(</span><span class="n">state_func</span><span class="o">=</span><span class="n">state_func</span><span class="p">,</span>
+                         <span class="n">labels</span><span class="o">=</span><span class="s">&#39;D4 D5 D6 D7 RS E RW&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  
+                         <span class="p">)</span>
+    <span class="n">ac</span> <span class="o">=</span> <span class="n">Ac</span><span class="p">(</span><span class="n">avr</span><span class="p">)</span>
+    <span class="n">connect_pins_by_rule</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">    avr.B0 &lt;=&gt; lcd.D4 -&gt; vcd</span>
+<span class="s">    avr.B1 &lt;=&gt; lcd.D5 -&gt; vcd</span>
+<span class="s">    avr.B2 &lt;=&gt; lcd.D6 -&gt; vcd</span>
+<span class="s">    avr.B3 &lt;=&gt; lcd.D7 -&gt; vcd</span>
+<span class="s">    </span>
+<span class="s">    avr.B4 ==&gt; lcd.RS -&gt; vcd</span>
+<span class="s">    avr.B5 ==&gt; lcd.E  -&gt; vcd</span>
+<span class="s">    avr.B6 ==&gt; lcd.RW -&gt; vcd</span>
+<span class="s">    vcd &lt;- ac.OUT -&gt; avr.D2</span>
+
+<span class="s">    lcd.D4 -&gt; led.0</span>
+<span class="s">    lcd.D5 -&gt; led.1</span>
+<span class="s">    lcd.D6 -&gt; led.2</span>
+<span class="s">    lcd.D7 -&gt; led.3</span>
+<span class="s">    </span>
+<span class="s">    lcd.RS -&gt; led.4</span>
+<span class="s">    lcd.E  -&gt; led.5</span>
+<span class="s">    lcd.RW -&gt; led.6</span>
+<span class="s">                        &#39;&#39;&#39;</span><span class="p">,</span>
+                         <span class="nb">dict</span><span class="p">(</span>
+                             <span class="n">avr</span><span class="o">=</span><span class="n">avr</span><span class="p">,</span>
+                             <span class="n">led</span><span class="o">=</span><span class="n">ledrow</span><span class="p">,</span>
+                             <span class="n">lcd</span><span class="o">=</span><span class="n">lcd</span><span class="p">,</span>
+                             <span class="n">ac</span><span class="o">=</span><span class="n">ac</span>
+                             <span class="p">),</span>
+                         <span class="n">vcd</span><span class="o">=</span><span class="n">vcd</span><span class="p">,</span>
+                         <span class="p">)</span>
+        
+    <span class="n">dev</span> <span class="o">=</span> <span class="n">CompositeGame</span><span class="p">([</span>
+                      <span class="n">CompositeGame</span><span class="p">(</span>
+                              <span class="p">[</span><span class="n">LcdGame</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">lcd</span><span class="o">.</span><span class="n">get_char</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+                               <span class="n">led_game</span><span class="p">,</span>
+                               <span class="p">],</span> 
+                                <span class="n">align</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                      <span class="n">InfoGame</span><span class="p">(</span><span class="n">avr</span><span class="p">),</span>
+                      <span class="p">])</span>
+    
+    <span class="n">scrshot_by_exit</span> <span class="o">=</span> <span class="p">[(</span><span class="n">dev</span><span class="p">,</span> <span class="n">image_file</span><span class="p">)]</span> <span class="k">if</span> <span class="n">image_file</span> <span class="k">else</span> <span class="bp">None</span>
+    
+    <span class="n">AvrSimMain</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">vcd</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+               <span class="n">scrshot_by_exit</span><span class="o">=</span><span class="n">scrshot_by_exit</span><span class="p">)</span><span class="o">.</span><span class="n">run_game</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Starting program:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysimavrgui.examples.sim.lcd</span> <span class="kn">import</span> <span class="n">run_sim</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">run_sim</span><span class="p">(</span><span class="n">vcdfile</span><span class="o">=</span><span class="s">&#39;docs/lcd.vcd&#39;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">image_file</span><span class="o">=</span><span class="s">&#39;docs/lcd.png&#39;</span><span class="p">)</span>
+<span class="go">Loaded 2112 .text</span>
+<span class="go">Loaded 14 .data</span>
+<span class="go">Starting atmega48 - flashend 0fff ramend 02ff e2end 00ff</span>
+<span class="go">atmega48 init</span>
+<span class="go">LCD: 37uS is 592 cycles for your AVR</span>
+<span class="go">LCD: 1uS is 16 cycles for your AVR</span>
+<span class="go">ac_input_init period 2000uS or 32000 cycles</span>
+<span class="go">hd44780_write_command 33</span>
+<span class="go">hd44780_write_command 30</span>
+<span class="go">hd44780_process_write command 20 write when still BUSY</span>
+<span class="go">hd44780_write_command 20</span>
+<span class="go">hd44780_write_command activating 4 bits mode</span>
+<span class="go">hd44780_write_command 28</span>
+<span class="go">hd44780_write_command 08</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 06</span>
+<span class="go">hd44780_write_command 0e</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 31</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 32</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 33</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 34</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 35</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 36</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 37</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 38</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 39</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 31</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 31</span>
+<span class="go">hd44780_write_data 31</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 31</span>
+<span class="go">hd44780_write_data 32</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 31</span>
+<span class="go">hd44780_write_data 33</span>
+</pre></div>
+</div>
+<p>GUI:</p>
+<img alt="_images/lcd.png" src="_images/lcd.png" />
+<p>Signals:</p>
+<img alt="_images/gtkwave_id1.png" src="_images/gtkwave_id1.png" />
+</div>
+<div class="section" id="seven-segment-display">
+<h2>seven segment display<a class="headerlink" href="#seven-segment-display" title="Permalink to this headline">¶</a></h2>
+<p>Program:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">entrypoint2</span> <span class="kn">import</span> <span class="n">entrypoint</span>
+<span class="kn">from</span> <span class="nn">path</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">pysimavr.avr</span> <span class="kn">import</span> <span class="n">Avr</span>
+<span class="kn">from</span> <span class="nn">pysimavr.connect</span> <span class="kn">import</span> <span class="n">connect_pins_by_rule</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.examples.sim.avrsimmain</span> <span class="kn">import</span> <span class="n">AvrSimMain</span>
+<span class="kn">from</span> <span class="nn">pysimavr.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.compgame</span> <span class="kn">import</span> <span class="n">CompositeGame</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.infogame</span> <span class="kn">import</span> <span class="n">InfoGame</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.ledrowgame</span> <span class="kn">import</span> <span class="n">LedRowGame</span>
+<span class="kn">from</span> <span class="nn">pysimavrgui.sgm7game</span> <span class="kn">import</span> <span class="n">Sgm7Game</span>
+<span class="kn">from</span> <span class="nn">pysimavr.inverter</span> <span class="kn">import</span> <span class="n">Inverter</span>
+<span class="kn">from</span> <span class="nn">pysimavr.ledrow</span> <span class="kn">import</span> <span class="n">LedRow</span>
+<span class="kn">from</span> <span class="nn">pysimavr.sgm7</span> <span class="kn">import</span> <span class="n">Sgm7</span>
+<span class="kn">from</span> <span class="nn">pysimavr.vcdfile</span> <span class="kn">import</span> <span class="n">VcdFile</span>
+
+<span class="nd">@entrypoint</span>
+<span class="k">def</span> <span class="nf">run_sim</span><span class="p">(</span><span class="n">vcdfile</span><span class="o">=</span><span class="s">&#39;sgm7.vcd&#39;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">image_file</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">firmware</span> <span class="o">=</span> <span class="n">Firmware</span><span class="p">(</span><span class="n">path</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">dirname</span><span class="p">()</span> <span class="o">/</span> <span class="s">&#39;sgm7.elf&#39;</span><span class="p">)</span>
+    <span class="n">firmware</span><span class="o">.</span><span class="n">f_cpu</span> <span class="o">=</span> <span class="mi">8000000</span>
+    <span class="n">firmware</span><span class="o">.</span><span class="n">mcu</span> <span class="o">=</span> <span class="s">&quot;atmega168&quot;</span>
+    <span class="n">avr</span> <span class="o">=</span> <span class="n">Avr</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span>
+    <span class="n">vcd</span> <span class="o">=</span> <span class="n">VcdFile</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">vcdfile</span><span class="p">)</span>
+
+    <span class="c">####################################################</span>
+    <span class="c"># ledrow</span>
+    <span class="n">ledrow</span> <span class="o">=</span> <span class="n">LedRow</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    
+    <span class="c">####################################################</span>
+    <span class="c"># ledrow game</span>
+    <span class="k">def</span> <span class="nf">state_func_seg</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ledrow</span><span class="o">.</span><span class="n">pinstate</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">ledrow</span><span class="o">.</span><span class="n">reset_dirty</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">led_game_seg</span> <span class="o">=</span> <span class="n">LedRowGame</span><span class="p">(</span><span class="n">state_func</span><span class="o">=</span><span class="n">state_func_seg</span><span class="p">,</span>
+                         <span class="n">disp_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                         <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;B&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>  
+                         <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">state_func_dig</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ledrow</span><span class="o">.</span><span class="n">pinstate</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">),</span> <span class="n">ledrow</span><span class="o">.</span><span class="n">reset_dirty</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">led_game_dig</span> <span class="o">=</span> <span class="n">LedRowGame</span><span class="p">(</span><span class="n">state_func</span><span class="o">=</span><span class="n">state_func_dig</span><span class="p">,</span>
+                         <span class="n">disp_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                         <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+    <span class="c">####################################################</span>
+    <span class="c"># sgm7</span>
+    <span class="n">sgm7</span> <span class="o">=</span> <span class="n">Sgm7</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="n">inv</span> <span class="o">=</span> <span class="p">[</span><span class="n">Inverter</span><span class="p">(</span><span class="n">avr</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+    
+    <span class="n">connect_pins_by_rule</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">                        ledrow.0 &lt;== avr.B0 ==&gt; sgm7.A -&gt; vcd</span>
+<span class="s">                        ledrow.1 &lt;== avr.B1 ==&gt; sgm7.B -&gt; vcd</span>
+<span class="s">                        ledrow.2 &lt;== avr.B2 ==&gt; sgm7.C -&gt; vcd</span>
+<span class="s">                        ledrow.3 &lt;== avr.B3 ==&gt; sgm7.D -&gt; vcd</span>
+<span class="s">                        ledrow.4 &lt;== avr.B4 ==&gt; sgm7.E -&gt; vcd</span>
+<span class="s">                        ledrow.5 &lt;== avr.B5 ==&gt; sgm7.F -&gt; vcd</span>
+<span class="s">                        ledrow.6 &lt;== avr.B6 ==&gt; sgm7.G -&gt; vcd</span>
+<span class="s">                        ledrow.7 &lt;== avr.B7 ==&gt; sgm7.P -&gt; vcd</span>
+<span class="s">                        </span>
+<span class="s">                        ledrow.8 &lt;== avr.C0 ==&gt; inv0.IN | inv0.OUT -&gt; sgm7.D0 -&gt; vcd</span>
+<span class="s">                        ledrow.9 &lt;== avr.C1 ==&gt; inv1.IN | inv1.OUT -&gt; sgm7.D1 -&gt; vcd</span>
+<span class="s">                        ledrow.10&lt;== avr.C2 ==&gt; inv2.IN | inv2.OUT -&gt; sgm7.D2 -&gt; vcd</span>
+<span class="s">                        ledrow.11&lt;== avr.C3 ==&gt; inv3.IN | inv3.OUT -&gt; sgm7.D3 -&gt; vcd</span>
+<span class="s">                        &#39;&#39;&#39;</span><span class="p">,</span>
+                         <span class="nb">dict</span><span class="p">(</span>
+                             <span class="n">avr</span><span class="o">=</span><span class="n">avr</span><span class="p">,</span>
+                             <span class="n">sgm7</span><span class="o">=</span><span class="n">sgm7</span><span class="p">,</span>
+                             <span class="n">ledrow</span><span class="o">=</span><span class="n">ledrow</span><span class="p">,</span>
+                             <span class="n">inv0</span><span class="o">=</span><span class="n">inv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="n">inv1</span><span class="o">=</span><span class="n">inv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                             <span class="n">inv2</span><span class="o">=</span><span class="n">inv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                             <span class="n">inv3</span><span class="o">=</span><span class="n">inv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                             <span class="p">),</span>
+                         <span class="n">vcd</span><span class="o">=</span><span class="n">vcd</span><span class="p">,</span>
+                         <span class="p">)</span>
+
+    <span class="c">####################################################</span>
+    <span class="c"># sgm7 game</span>
+    <span class="k">def</span> <span class="nf">segments_func</span><span class="p">(</span><span class="n">digit_index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sgm7</span><span class="o">.</span><span class="n">digit_segments</span><span class="p">(</span><span class="n">digit_index</span><span class="p">),</span> <span class="n">sgm7</span><span class="o">.</span><span class="n">reset_dirty</span><span class="p">(</span><span class="n">digit_index</span><span class="p">))</span>
+    <span class="n">sgm7_game</span> <span class="o">=</span> <span class="n">Sgm7Game</span><span class="p">(</span><span class="n">segments_func</span><span class="o">=</span><span class="n">segments_func</span><span class="p">,</span> <span class="n">disp_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+         
+    <span class="c">####################################################</span>
+    <span class="c"># compose game</span>
+    <span class="n">dev</span> <span class="o">=</span> <span class="n">CompositeGame</span><span class="p">([</span>
+                      <span class="n">CompositeGame</span><span class="p">(</span>
+                              <span class="p">[</span>
+                               <span class="n">sgm7_game</span><span class="p">,</span>
+                               <span class="n">led_game_seg</span><span class="p">,</span>
+                               <span class="n">led_game_dig</span><span class="p">,</span>
+                               <span class="p">],</span>
+                                    <span class="n">align</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                      <span class="n">InfoGame</span><span class="p">(</span><span class="n">avr</span><span class="p">),</span>
+                      <span class="p">])</span>
+    
+    <span class="n">scrshot_by_exit</span> <span class="o">=</span> <span class="p">[(</span><span class="n">dev</span><span class="p">,</span> <span class="n">image_file</span><span class="p">)]</span> <span class="k">if</span> <span class="n">image_file</span> <span class="k">else</span> <span class="bp">None</span>
+    
+    <span class="n">AvrSimMain</span><span class="p">(</span><span class="n">avr</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">vcd</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+               <span class="n">scrshot_by_exit</span><span class="o">=</span><span class="n">scrshot_by_exit</span><span class="p">)</span><span class="o">.</span><span class="n">run_game</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Starting program:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysimavrgui.examples.sim.sgm7</span> <span class="kn">import</span> <span class="n">run_sim</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">run_sim</span><span class="p">(</span><span class="n">vcdfile</span><span class="o">=</span><span class="s">&#39;docs/sgm7.vcd&#39;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">image_file</span><span class="o">=</span><span class="s">&#39;docs/sgm7.png&#39;</span><span class="p">)</span>
+<span class="go">Loaded 680 .text</span>
+<span class="go">Loaded 6 .data</span>
+<span class="go">Starting atmega168 - flashend 3fff ramend 04ff e2end 01ff</span>
+<span class="go">atmega168 init</span>
+<span class="go">avr_timer_reconfigure-1 clock turned off</span>
+<span class="go">avr_timer_write_ocr-1 mode 0 UNSUPPORTED</span>
+<span class="go">avr_timer_reconfigure-1 clock turned off</span>
+<span class="go">avr_timer_configure-1 TOP 639.80Hz = 12503 cycles</span>
+<span class="go">avr_timer_configure-1 A 639.80Hz = 12503 cycles</span>
+</pre></div>
+</div>
+<p>GUI:</p>
+<img alt="_images/sgm7.png" src="_images/sgm7.png" />
+<p>Signals:</p>
+<img alt="_images/gtkwave_id2.png" src="_images/gtkwave_id2.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Simulation examples</a><ul>
+<li><a class="reference internal" href="#ledramp">ledramp</a></li>
+<li><a class="reference internal" href="#lcd">LCD</a></li>
+<li><a class="reference internal" href="#seven-segment-display">seven segment display</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="exgame.html"
+                        title="previous chapter">GUI examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="exard.html"
+                        title="next chapter">Arduino simulator</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/exsim.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="exard.html" title="Arduino simulator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="exgame.html" title="GUI examples"
+             >previous</a> |</li>
+        <li><a href="index.html">pysimavrgui 0.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, ponty.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
+    </div>
+  </body>
+</html>

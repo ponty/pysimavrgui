@@ -1,0 +1,195 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Arduino simulator &mdash; pysimavrgui 0.0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pysimavrgui 0.0.2 documentation" href="index.html" />
+    <link rel="next" title="CLI help for examples" href="cli.html" />
+    <link rel="prev" title="Simulation examples" href="exsim.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cli.html" title="CLI help for examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="exsim.html" title="Simulation examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pysimavrgui 0.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="arduino-simulator">
+<h1>Arduino simulator<a class="headerlink" href="#arduino-simulator" title="Permalink to this headline">¶</a></h1>
+<dl class="docutils">
+<dt>How to use it:</dt>
+<dd><ul class="first last simple">
+<li>start arduino software</li>
+<li>compile a sketch, the firmware will be saved in temporary directory</li>
+<li>start the arduino simulator example: <tt class="docutils literal"><span class="pre">`python</span> <span class="pre">-m</span> <span class="pre">pysimavrgui.examples.sim.arduino`</span></tt>
+The name of the sketch is displayed on the GUI.</li>
+<li>after recompiling in arduino select &#8216;reload&#8217; on simulator GUI</li>
+</ul>
+</dd>
+</dl>
+<div class="section" id="lcd-sketch">
+<h2>LCD sketch<a class="headerlink" href="#lcd-sketch" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>#include &lt;LiquidCrystal.h&gt;
+
+LiquidCrystal lcd(12, 11, 10, 5, 4, 3, 2);
+
+void setup() {
+  lcd.begin(16, 2);
+  lcd.print("hello, world!");
+}
+
+void loop() {
+}</pre>
+</div>
+<div class="highlight-python"><pre>$ python -m pysimavrgui.examples.sim.arduino -c pysimavrgui/examples/arduino/lcd.pde
+</pre>
+</div>
+<img alt="_images/screenshot_id0.png" src="_images/screenshot_id0.png" />
+</div>
+<div class="section" id="led-sketch">
+<h2>LED sketch<a class="headerlink" href="#led-sketch" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>void setup() {
+  // initialize the digital pin as an output.
+  // Pin 13 has an LED connected on most Arduino boards:
+  pinMode(13, OUTPUT);     
+
+  digitalWrite(13, HIGH);   // set the LED on
+}
+
+void loop() {
+}
+
+</pre>
+</div>
+<div class="highlight-python"><pre>$ python -m pysimavrgui.examples.sim.arduino -c pysimavrgui/examples/arduino/led.pde
+</pre>
+</div>
+<img alt="_images/screenshot_id1.png" src="_images/screenshot_id1.png" />
+</div>
+<div class="section" id="print-sketch">
+<h2>print sketch<a class="headerlink" href="#print-sketch" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>void setup() {
+    Serial.begin(9600);
+    Serial.println("hello, world!");
+}
+
+void loop() {
+}
+
+</pre>
+</div>
+<div class="highlight-python"><pre>$ python -m pysimavrgui.examples.sim.arduino -c pysimavrgui/examples/arduino/print.pde
+</pre>
+</div>
+<img alt="_images/screenshot_id2.png" src="_images/screenshot_id2.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Arduino simulator</a><ul>
+<li><a class="reference internal" href="#lcd-sketch">LCD sketch</a></li>
+<li><a class="reference internal" href="#led-sketch">LED sketch</a></li>
+<li><a class="reference internal" href="#print-sketch">print sketch</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="exsim.html"
+                        title="previous chapter">Simulation examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cli.html"
+                        title="next chapter">CLI help for examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/exard.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cli.html" title="CLI help for examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="exsim.html" title="Simulation examples"
+             >previous</a> |</li>
+        <li><a href="index.html">pysimavrgui 0.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, ponty.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
+    </div>
+  </body>
+</html>
