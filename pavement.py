@@ -99,7 +99,9 @@ if ALL_TASKS_LOADED:
                                      ]
 
     options.paved.dist.manifest.include.remove('distribute_setup.py')
-
+    options.paved.dist.manifest.recursive_include.add('pysimavrgui *.bmp')
+    options.paved.dist.manifest.recursive_include.add('pysimavrgui *.pde')
+    options.paved.dist.manifest.recursive_include.add('pysimavrgui *.elf')
             
     @task
     @needs('sloccount', 'html', 'pdf', 'sdist', 'nose')

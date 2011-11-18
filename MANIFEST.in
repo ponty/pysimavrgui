@@ -6,4 +6,7 @@ include TODO*
 include CHANGES*
 include README*
 include setup.py
+recursive-include pysimavrgui *.bmp
+recursive-include pysimavrgui *.pde
+recursive-include pysimavrgui *.elf
 prune docs/_build
