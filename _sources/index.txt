@@ -12,6 +12,7 @@ Contents:
     readme
     exgame
     exsim
+    exard
     cli
     api
     dev

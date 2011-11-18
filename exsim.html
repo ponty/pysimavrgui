@@ -3,17 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Simulation examples &mdash; pysimavrgui v0.0.0 documentation</title>
+    <title>Simulation examples &mdash; pysimavrgui 0.0.1 documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.0.0',
+        VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,8 +25,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pysimavrgui v0.0.0 documentation" href="index.html" />
-    <link rel="next" title="CLI help for examples" href="cli.html" />
+    <link rel="top" title="pysimavrgui 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Arduino simulator" href="exard.html" />
     <link rel="prev" title="GUI examples" href="exgame.html" /> 
   </head>
   <body>
@@ -37,12 +40,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="cli.html" title="CLI help for examples"
+          <a href="exard.html" title="Arduino simulator"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="exgame.html" title="GUI examples"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pysimavrgui v0.0.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pysimavrgui 0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -345,6 +348,16 @@
 <span class="go">hd44780_write_data 3a</span>
 <span class="go">hd44780_write_data 31</span>
 <span class="go">hd44780_write_data 32</span>
+<span class="go">hd44780_write_command 01</span>
+<span class="go">hd44780_write_command 84</span>
+<span class="go">hd44780_write_data 20</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 30</span>
+<span class="go">hd44780_write_data 3a</span>
+<span class="go">hd44780_write_data 31</span>
+<span class="go">hd44780_write_data 33</span>
 </pre></div>
 </div>
 <p>GUI:</p>
@@ -494,8 +507,8 @@
   <p class="topless"><a href="exgame.html"
                         title="previous chapter">GUI examples</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="cli.html"
-                        title="next chapter">CLI help for examples</a></p>
+  <p class="topless"><a href="exard.html"
+                        title="next chapter">Arduino simulator</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/exsim.txt"
@@ -504,7 +517,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -528,17 +541,17 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="cli.html" title="CLI help for examples"
+          <a href="exard.html" title="Arduino simulator"
              >next</a> |</li>
         <li class="right" >
           <a href="exgame.html" title="GUI examples"
              >previous</a> |</li>
-        <li><a href="index.html">pysimavrgui v0.0.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pysimavrgui 0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011, ponty.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
     </div>
   </body>
 </html>
