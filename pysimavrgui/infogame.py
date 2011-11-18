@@ -28,6 +28,12 @@ class InfoGame(CompositeGame):
         
         self.reload()
         
+        def avr_state():
+            try:
+                return avr.states[avr.state]
+            except:
+                return str(avr.state)
+            
         CompositeGame.__init__(self,
                 [
                  TextGame((lambda : "mcu=%s" % avr.mcu)),
@@ -39,7 +45,7 @@ class InfoGame(CompositeGame):
                  TextGame((lambda : 'mem: %s bytes %s%%' % (avr.avrsize.data_bytes, avr.avrsize.data_percentage))),
                  TextGame((lambda : "vcc=%sV avcc=%sV" % (avr.vcc, avr.avcc))),
                  TextGame((lambda : "pc=%8d" % avr.pc)),
-                 TextGame((lambda : "state=%s" % avr.states[avr.state])),
+                 TextGame((lambda : "state=%s" % avr_state())),
                  TextGame((lambda : "cycle= %9d" % (avr.cycle))),
                  TextGame((lambda : "mcu time=%s us" % str(1000000 * avr.cycle / avr.f_cpu).rjust(10))),
                  TextGame((lambda : "real time=%s s" % str((pygame.time.get_ticks() - self.start) / 1000).rjust(3))),
