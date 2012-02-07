@@ -28,21 +28,21 @@ General
 --------
 
  * install python_
- * install setuptools_
+ * install pip_
  * install PyGame_ 
  * install PyAudio_ (optional)
  * install pysimavr_ 
  * install the program::
 
     # as root
-    easy_install pysimavrgui
+    pip install pysimavrgui
 
 
 Ubuntu
 ----------
 ::
 
-    sudo apt-get install python-setuptools
+    sudo apt-get install python-pip
     sudo apt-get install python-pygame
     sudo apt-get install python-pyaudio
     
@@ -51,18 +51,18 @@ Ubuntu
     sudo apt-get install python-dev
     sudo apt-get install gcc
     sudo apt-get install libelf-dev
-    sudo easy_install pysimavr    
+    sudo pip install pysimavr    
 
     # for arduino
     sudo apt-get install scons
     sudo apt-get install arduino
     
-    sudo easy_install pysimavrgui
+    sudo pip install pysimavrgui
 
 Uninstall
 ----------
 
-first install pip_::
+::
 
     # as root
     pip uninstall pysimavrgui

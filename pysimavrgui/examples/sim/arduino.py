@@ -285,5 +285,5 @@ def arduino_sim(
         
     if udp_enable:
         udpReader.terminate()
-        return udpReader.buffer
+#        return udpReader.buffer
 

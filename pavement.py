@@ -12,6 +12,7 @@ try:
     from paved.util import *
     from paved.docs import *
     from paved.pycheck import *
+    from paved.pkg import *
     from sphinxcontrib import paverutils
     ALL_TASKS_LOADED = True
 except ImportError, e:
@@ -46,12 +47,7 @@ classifiers = [
     "Programming Language :: Python",
     ]
 
-install_requires = [
-    'setuptools',
-    'path.py',
-    'pygame',
-    'entrypoint2',
-    ]
+install_requires = open("requirements.txt").read().split('\n')
 
 setup(
     name=NAME,
@@ -102,9 +98,17 @@ if ALL_TASKS_LOADED:
     options.paved.dist.manifest.recursive_include.add('pysimavrgui *.bmp')
     options.paved.dist.manifest.recursive_include.add('pysimavrgui *.pde')
     options.paved.dist.manifest.recursive_include.add('pysimavrgui *.elf')
+    options.paved.dist.manifest.include.add('requirements.txt')
             
     @task
-    @needs('sloccount', 'html', 'pdf', 'sdist', 'nose')
+    @needs(
+           'clean',
+           'sloccount', 
+           'html', 
+           'pdf', 
+           'sdist', 
+           'nose',
+           )
     def alltest():
         'all tasks to check'
         pass
