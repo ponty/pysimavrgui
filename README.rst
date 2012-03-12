@@ -11,8 +11,8 @@ Features:
  - arduino_ simulator included
  - maximum speed can be real-time
  - speed control
- - audio backend: PyAudio_
- - graphic backend: PyGame_ (SDL_ wrapper)
+ - audio back-end: PyAudio_
+ - graphic back-end: PyGame_ (SDL_ wrapper)
  
 Known problems:
  - Python 3 is not supported

@@ -87,10 +87,10 @@ def find_elf():
 @entrypoint
 def arduino_sim(
             elf='',
-            mcu='atmega168',
+            mcu='atmega328',
             f_cpu=16000000,
             vcdfile='arduino.vcd',
-            speed=1,
+            speed=0.1,
             fps=20,
             timeout=0.0,
             visible=1,
