@@ -5,6 +5,7 @@ try:
     import pyaudio
 except ImportError:
     logging.debug('pyaudio is missing, sound is not supported')
+    pyaudio=None
     
 chunk = 1024
 
