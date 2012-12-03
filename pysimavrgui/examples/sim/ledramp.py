@@ -10,6 +10,7 @@ from pysimavrgui.ledrowgame import LedRowGame
 from pysimavr.ledrow import LedRow
 from pysimavr.vcdfile import VcdFile
 
+
 @entrypoint
 def run_sim(vcdfile='ledramp.vcd', speed=0.1, fps=20, timeout=0.0, visible=1, image_file=''):
     firmware = Firmware(path(__file__).dirname() / 'ledramp.elf')
@@ -30,21 +31,22 @@ def run_sim(vcdfile='ledramp.vcd', speed=0.1, fps=20, timeout=0.0, visible=1, im
                          dict(
                              avr=avr,
                              led=ledrow,
-                             ),
+                         ),
                          vcd=vcd,
-    )
-    
+                         )
+
     def state_func(i):
         return (ledrow.pinstate(i), ledrow.reset_dirty(i))
     led_game = LedRowGame(state_func=state_func,
                           labels=['B' + str(x) for x in range(8)])
-        
+
     dev = CompositeGame([
                         led_game,
                         InfoGame(avr),
                         ])
-    
+
     scrshot_by_exit = [(dev, image_file)] if image_file else None
 
-    AvrSimMain(avr, dev, vcd, speed=speed, fps=fps, visible=visible, timeout=timeout,
-               scrshot_by_exit=scrshot_by_exit).run_game()
+    AvrSimMain(
+        avr, dev, vcd, speed=speed, fps=fps, visible=visible, timeout=timeout,
+        scrshot_by_exit=scrshot_by_exit).run_game()
