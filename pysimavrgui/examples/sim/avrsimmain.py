@@ -25,8 +25,8 @@ class AvrSimMain(MainGame):
         if self.timeout:
 #            self.avr.goto_time(self.timeout)
             if self.avr.time_passed() >= self.timeout:
-                log.debug('avr.time_passed=%d' % self.avr.time_passed())
-                log.debug('timeout=%d' % self.timeout)
+                log.debug('avr.time_passed=%f' % self.avr.time_passed())
+                log.debug('timeout=%f' % self.timeout)
                 log.debug('exiting')
                 self.exit = True
 
