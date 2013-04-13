@@ -6,7 +6,7 @@ Install:
  * install vagrant_
  * install VirtualBox_
  
-Run:
+Run::
 
     # to start box
     cd vagrant
