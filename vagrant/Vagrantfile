@@ -1,0 +1,31 @@
+Vagrant::Config.run do |config|
+  config.vm.box = "precise32"
+  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+  #config.vm.boot_mode = :gui
+  config.vm.network :hostonly, "10.0.0.100"
+
+  vm_cookbooks_path = "/usr/local/chef_managed_cookbooks"
+  cmd = "
+  apt-get install git -y -q
+  gem install librarian-chef
+  mkdir -p #{vm_cookbooks_path}/cookbooks
+  cp -fr /vagrant/Cheffile #{vm_cookbooks_path}
+  cd #{vm_cookbooks_path}
+  librarian-chef install
+  "
+#  print(cmd)  
+  config.vm.provision :shell, :inline => cmd
+
+  config.vm.provision :chef_solo do |chef|
+    chef.json = {
+    }
+
+    chef.cookbooks_path = [
+      "cookbooks",
+      [:vm, vm_cookbooks_path],
+    ]
+    chef.run_list = [
+      "recipe[pysimavrgui]",
+    ]
+  end
+end

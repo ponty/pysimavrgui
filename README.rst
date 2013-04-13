@@ -21,6 +21,8 @@ Known problems:
  - occasional crash by firmware reload  
  - poor sound quality
 
+Test using virtual machine: there is a vagrant configuration inside vagrant directory
+
 Installation
 ============
 
