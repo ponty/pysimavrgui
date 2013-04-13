@@ -88,7 +88,7 @@ def arduino_sim(
     mcu='atmega328',
     f_cpu=16000000,
     vcdfile='arduino.vcd',
-            speed=0.1,
+            speed=0.5,
             fps=20,
             timeout=0.0,
             visible=1,
@@ -97,7 +97,7 @@ def arduino_sim(
             buttons_enable=1,
             vcd_enable=0,
             spk_enable=0,
-            udp_enable=1,
+#            udp_enable=1,
             avcc=5000,
             vcc=5000,
             code=None,
@@ -127,12 +127,12 @@ def arduino_sim(
     avr = Avr(mcu=mcu, f_cpu=f_cpu, vcc=vcc / 1000.0, avcc=avcc / 1000.0)
     avr.load_firmware(firmware)
 
-    udpReader = UdpReader()
+#    udpReader = UdpReader()
 
-    if udp_enable:
-        udp = Udp(avr)
-        udp.connect()
-        udpReader.start()
+#    if udp_enable:
+#        udp = Udp(avr)
+#        udp.connect()
+#        udpReader.start()
 
     lcd = Lcd(avr)
 
@@ -226,19 +226,21 @@ def arduino_sim(
             self.value /= 10.0
     speed = MyFloat(speed)
 
-    def udp_read():
-        if not hasattr(udp_read, 'display'):
-            udp_read.display = ''
-        if not hasattr(udp_read, 'lastline'):
-            udp_read.lastline = ''
-        s = udpReader.read()
-        if s:
-            sys.stdout.write(s)
-            udp_read.lastline += s
-            udp_read.lastline = lastline(udp_read.lastline)
-            udp_read.display = udp_read.lastline.replace(
-                '\n', '\\n').replace('\r', '\\r')
-        return  udp_read.display
+#    def udp_read():
+#        if not hasattr(udp_read, 'display'):
+#            udp_read.display = ''
+#        if not hasattr(udp_read, 'lastline'):
+#            udp_read.lastline = ''
+#        s = udpReader.read()
+#        if s:
+#            sys.stdout.write(s)
+#            udp_read.lastline += s
+#            udp_read.lastline = lastline(udp_read.lastline)
+#            udp_read.display = udp_read.lastline.replace(
+#                '\n', '\\n').replace('\r', '\\r')
+#        return  udp_read.display
+    def uart_read():
+        return avr.uart.last_line.replace('\n', '\\n').replace('\r', '\\r')
 
     dev = CompositeGame([
                         CompositeGame([led_game,
@@ -262,7 +264,7 @@ def arduino_sim(
 
         LcdGame(
         lambda x, y:lcd.get_char(x, y), (16, 2)),
-                            TextGame((lambda: 'ser=' + udp_read())),
+                            TextGame((lambda: 'ser=' + uart_read())),
                         ], align=1)
     ])
 
@@ -286,9 +288,8 @@ def arduino_sim(
     if spk_enable:
         spk_game.terminate()
 
-    if udp_enable:
-        udp.terminate()
-
-    if udp_enable:
-        udpReader.terminate()
-#        return udpReader.buffer
+#    if udp_enable:
+#        udp.terminate()
+#
+#    if udp_enable:
+#        udpReader.terminate()
